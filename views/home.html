@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+  <h2>Mini Car Inventory System</h2>
+  
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home">Add Manufacturer</a></li>
+    <li><a data-toggle="tab" href="#menu1">Add Model</a></li>
+    <li><a data-toggle="tab" href="#menu2">View Inventory</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+        <div class="row" style="margin-top: 50px; margin-left:20px;">
+            <form class="form-inline" method="POST">
+                <div class="form-group">
+                    <label>Manufacturer Name:</label>
+                    <input name="manufacturer_name" type="text" class="form-control" required>
+                </div>
+                <button name="submitButton" value="manufacturer" type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div id="menu1" class="tab-pane fade">
+        <div class="row" style="margin-top: 50px; margin-left:20px;">
+            <form class="form-inline" method="POST">
+                <div class="form-group">
+                    <input name="car_model" type="text" class="form-control" placeholder="Enter a model" required>
+                    <select name="manufacturer" class="form-control" required>
+                        <option disabled selected value>Choose a Manufacturer</option>
+                        {{ range $manufacturer := .RetrievedManufacturers }}
+                        <option value="{{ $manufacturer._id }}">{{ $manufacturer.name }}</option>
+                        {{end}}             
+                    </select>
+                    <input name="inventory" type="text" class="form-control" placeholder="Add Inventory" required>
+                </div>
+                <button name="submitButton" value="model" type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+    <div id="menu2" class="tab-pane fade">
+        <table id="table_id" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Manufacturer</th>
+                    <th>Model</th>
+                    <th>Inventory</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ if compare .RangeEmpty "true"}}
+                <tr><td>Inventory Empty</td></tr>
+                {{else}}
+                    {{ range $cars := .RetrievedInventory }}
+                    <tr>
+                        <td>{{ $cars.name }}</td>
+                        <td>{{ $cars.model_name }}</td>
+                        <td>{{ $cars.car_count }}</td>
+                        <td><button onclick="sellCar({{ $cars.manufacturerId}}, {{ $cars.modelId}}, {{ $cars.car_count}});" class="btn btn-default">Sold</button></td>
+                    </tr>
+                    {{end}}
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+    function sellCar(manufacturerId , modelId, carCount) {
+        if(confirm("Are you sure you want to sell this model?")){
+            var info = 'manufacturerId=' + manufacturerId 
+            + '&modelId=' + modelId
+            + '&carCount=' + carCount;
+
+            $.ajax({
+                type: "GET",
+                url: "/updateInventory",
+                data: info,
+                success: function(msg){ 
+                    if (msg == "true") {
+                        // if(alert('Customer Deleted!')){}
+                        // else    window.location.reload();
+                        $("#table_id").load(window.location + " #table_id");
+                    }
+                    else {
+                        window.alert("Something is wrong. Try again later!")
+                    }
+                } 
+            });
+        }
+    }
+</script>
+</body>
+</html>
