@@ -1,7 +1,8 @@
 package routers
 
 import (
-	"minicarproject/controllers"
+	"test/minicar/controllers"
+
 	"github.com/astaxie/beego"
 )
 

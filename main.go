@@ -4,9 +4,9 @@ import (
 	/* _ "minicarproject/routers"
 	"github.com/astaxie/beego" */
 	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego"
 	// _ "github.com/go-sql-driver/mysql"
-
-	"github.com/beego/beego/v2/server/web"
+	// "github.com/beego/beego/v2/server/web"
 )
 
 func init() {
@@ -17,6 +17,6 @@ func init() {
 
 func main() {
 	orm.Debug = true
-	//beego.Run()
-	web.Run()
+	beego.Run()
+	// web.Run()
 }

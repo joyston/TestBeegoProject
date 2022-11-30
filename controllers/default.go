@@ -3,7 +3,8 @@ package controllers
 import (
 	//"fmt"
 	"strconv"
-	"minicarproject/models"
+	"test/minicar/models"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
@@ -11,7 +12,6 @@ import (
 type MainController struct {
 	beego.Controller
 }
-
 
 func (c *MainController) Manufacturer() {
 	c.Data["Website"] = "beego.me"
@@ -40,7 +40,7 @@ func (c *MainController) Manufacturer() {
 			// 	c.Data["NameErr"] = "Name required"
 			// 	return
 			// }
-	
+
 			insertStatus := models.AddManufacturer(manufacturername)
 			if insertStatus == 1 {
 				c.Redirect("/manufacturer", 303)
@@ -55,7 +55,7 @@ func (c *MainController) Manufacturer() {
 			// 	c.Data["NameErr"] = "Name required"
 			// 	return
 			// }
-	
+
 			insertStatus := models.AddCarModel(modelName, manufacturerId, totalInventory)
 			if insertStatus == 1 {
 				c.Redirect("/manufacturer", 303)
